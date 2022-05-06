@@ -8,7 +8,10 @@ current_time = now.strftime("%H:%M:%S")
 class app_monitor():
     def rtorrent_monitor(self):
         status = os.popen("pgrep rtorrent").read()
-        print(status)
+        if status is None:
+            os.system("app-rtorrent restart")
+        else:
+            pass
 
 
 
