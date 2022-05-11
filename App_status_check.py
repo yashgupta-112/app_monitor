@@ -50,4 +50,4 @@ if __name__ == '__main__':
     if check == False:
         monitor.create_app_list()
     else:
-        print("file already exist")
+        monitor.docker_app()
