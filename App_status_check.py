@@ -26,7 +26,7 @@ class app_monitor():
         this is the approach
         """
     def create_app_list(self):
-        os.system("mkdir {}/bin/app_monitor")
+        os.system("mkdir {}/bin/app_monitor".format(work_dir))
         app_list = list(input("Please enter all applications you want to monitor with a single space in between(for example sonarr radarr lidarr):").split())
         app_list = str(app_list)
         with open(apps_file,'+w') as f:
