@@ -11,7 +11,7 @@ Variable for location of file below
 """
 work_dir = os.getcwd()
 apps_file= '{}/bin/app_monitor/apps.txt'.format(work_dir)
-list_apps = []
+monitor_app_list = []
 
 """
 Function are defined below
@@ -27,7 +27,9 @@ class app_monitor():
         #status = os.popen("ps aux | grep -i sonarr").read()
         #print(len(status.splitlines()))
         with open(apps_file,'r') as f:
-            pass
+            s = f.readlines()
+        monitor_app_list = [x.strip() for x in s]
+        print(monitor_app_list)
    
     def create_app_list(self):
         os.system("mkdir {}/bin/app_monitor".format(work_dir))
