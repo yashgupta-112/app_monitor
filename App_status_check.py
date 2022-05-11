@@ -41,7 +41,7 @@ class app_monitor():
 monitor = app_monitor()
 if __name__ == '__main__':
     check = os.path.exists(apps_file)
-    if check:
+    if check == False:
         monitor.create_app_list()
     else:
-        pass
+        print("file already exist")
