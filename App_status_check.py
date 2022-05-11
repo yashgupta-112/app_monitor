@@ -11,6 +11,11 @@ Variable for location of file below
 """
 work_dir = os.getcwd()
 apps_file= '{}/bin/app_monitor/apps.txt'.format(work_dir)
+list_apps = []
+
+"""
+Function are defined below
+"""
 class app_monitor():
     def rtorrent_monitor(self):
         status = os.popen("pgrep rtorrent").read()
@@ -19,19 +24,18 @@ class app_monitor():
         else:
             pass
     def docker_app(self):
-        status = os.popen("ps aux | grep -i sonarr").read()
-        print(len(status.splitlines()))
-        """
-        Len output less or equal 2 upgrade the app 
-        this is the approach
-        """
+        #status = os.popen("ps aux | grep -i sonarr").read()
+        #print(len(status.splitlines()))
+        with open(apps_file,'r') as f:
+            pass
+   
     def create_app_list(self):
         os.system("mkdir {}/bin/app_monitor".format(work_dir))
-        app_list = list(input("Please enter all applications you want to monitor with a single space in between(for example sonarr radarr lidarr):").split())
-        app_list = str(app_list)
+        app_list = input("Please enter all applications you want to monitor with a single space in between(for example sonarr radarr lidarr):").split()
         with open(apps_file,'+w') as f:
-            f.write(app_list)
-            f.close()
+            for i in app_list:
+                f.write(i + '\n')
+        f.close()
             
     
 

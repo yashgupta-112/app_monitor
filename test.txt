@@ -1,0 +1,5 @@
+sonarr
+radarr
+qibttorrent
+lidarr
+rtorrent
