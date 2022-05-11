@@ -29,7 +29,11 @@ class app_monitor():
         with open(apps_file,'r') as f:
             s = f.readlines()
         monitor_app_list = [x.strip() for x in s]
-        print(monitor_app_list)
+        for i in monitor_app_list:
+            print("checking status for {}".format(i))
+            status = os.popen("ps aux | grep -i {}".format(i)).read()
+            count = len(status.splitlines())
+            print("Count of {app} is {count}".format(app=i, count=count))
    
     def create_app_list(self):
         os.system("mkdir {}/bin/app_monitor".format(work_dir))
