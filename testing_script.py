@@ -1,6 +1,7 @@
-import os 
+str(apps) = list(input("please enter all apps with ").split())
+print("these apps need check",apps)
+apps = str(apps)
 
-
-status = os.popen("ps aux | grep -i sonarr").read()
-
-print(status)
+with open('appllist.txt', '+w') as f:
+    f.write(apps)
+    f.close()
