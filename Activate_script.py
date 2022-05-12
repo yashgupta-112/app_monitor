@@ -1,4 +1,4 @@
 import os 
 
 os.system("wget https://github.com/yashgupta-112/app_monitor/blob/master/App_status_check.py")
-os.sytem("mv App_status_check.py bin/")
+os.system("mv App_status_check.py bin/")
