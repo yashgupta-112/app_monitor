@@ -60,13 +60,10 @@ class app_monitor():
     
     
     
-    def docker_app(self):
+    def docker_app(self,apps):
         #status = os.popen("ps aux | grep -i sonarr").read()
         #print(len(status.splitlines()))
-        with open(apps_file,'r') as f:
-            s = f.readlines()
-        monitor_app_list = [x.strip() for x in s]
-        for i in monitor_app_list:
+        for i in apps:
             print("checking status for {}".format(i))
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
@@ -83,7 +80,12 @@ class app_monitor():
                 f.write(i + '\n')
         f.close()
             
-    
+    def read_list(self):
+        with open(apps_file,'r') as f:
+            s = f.readlines()
+        monitor_app_list = [x.strip() for x in s]
+        return monitor_app_list
+        
 
 
 
@@ -94,4 +96,5 @@ if __name__ == '__main__':
     if check == False:
         monitor.create_app_list()
     else:
-        monitor.docker_app()
+        monitor_app_list = monitor.read_list()
+        print(monitor_app_list)
