@@ -13,7 +13,7 @@ work_dir = os.getcwd()
 apps_file= '{}/bin/app_monitor/apps.txt'.format(work_dir)
 monitor_app_list = []
 rtorrent_log_file = '{}/bin/app_monitor/rtorrent.txt'.format(work_dir)
-docker_log_file = '{}/bin/app_monitor/rtorrent.txt'.format(work_dir)
+docker_log_file = '{}/bin/app_monitor/docker_apps.txt'.format(work_dir)
 
 
 """
@@ -69,6 +69,9 @@ class app_monitor():
             count = len(status.splitlines())
             if count <=2:
                 os.system("app-{} upgrade".format(i))
+                with open(docker_log_file, "a") as f:
+                    f.write("\n\nTIME: "+current_time+"\n")
+                    f.write('{i} was down and has been RESTARTED'.format(i))
             else:
                 pass
    
@@ -97,4 +100,9 @@ if __name__ == '__main__':
         monitor.create_app_list()
     else:
         monitor_app_list = monitor.read_list()
-        print(monitor_app_list)
+        if 'rtorrent' in monitor_app_list:
+            monitor.rtorrent_monitor()
+            monitor_app_list.remove('rtorrent')
+            monitor.docker_app(monitor_app_list)
+        else:
+            monitor.docker_app(monitor_app_list)
