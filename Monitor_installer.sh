@@ -24,7 +24,7 @@ cronjob="*/5 * * * * $croncmd"
 ) | crontab -
 
 croncmd="rm -rf $HOME/script/app_monitor/docker_apps.txt  rtorrent.txt"
-cronjob="* * 1* * * $croncmd"
+cronjob="0 0 1 * * $croncmd"
 (
     crontab -l 2>/dev/null | grep -v -F "$croncmd" || :
     echo "$cronjob"
