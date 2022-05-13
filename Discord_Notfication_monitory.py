@@ -17,6 +17,7 @@ apps_file = '{}/script/app_monitor/apps.txt'.format(work_dir)
 monitor_app_list = []
 rtorrent_log_file = '{}/script/app_monitor/rtorrent.txt'.format(work_dir)
 docker_log_file = '{}/script/app_monitor/docker_apps.txt'.format(work_dir)
+Discord_WebHook_File = '{}/script/app_monitor/discord.txt'.format(work_dir)
 Web_Hook_URL = ""
 torrent_client_list = ['deluge','transmission','qbittorrent','rtorrent']
 
@@ -24,7 +25,7 @@ torrent_client_list = ['deluge','transmission','qbittorrent','rtorrent']
 Main function is defined below
 """
 class app_monitor():
-    def rtorrent_monitor(self):
+    def rtorrent_monitor(self,Web_Hook_URL):
         Pid = os.system('pgrep rtorrent')
         Pid = int(Pid)
 
@@ -55,7 +56,7 @@ class app_monitor():
         else:
             pass
 
-    def docker_app(self, apps):
+    def docker_app(self, apps,Web_Hook_URL):
         for i in apps:
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
@@ -81,9 +82,15 @@ class app_monitor():
                 f.write(i + '\n')
         f.close()
         
-    def Discord_Notifications(self):
+    def Discord_Notifications_Accepter(self):
         Web_Url = input("Please enter your Discord Web Hook Url Here:")
-        return Web_Url
+        with open(Discord_WebHook_File,'+w') as f:
+            f.write(Web_Url)
+    
+    def Discord_WebHook_Reader(self):
+        with open(Discord_WebHook_File,'r') as f:
+            return f.read()
+       
 
     def read_list(self):
         with open(apps_file, 'r') as f:
@@ -97,7 +104,7 @@ class app_monitor():
         list3 = list1.intersection(list2)
         return list(list3)
     
-    def torrent_client_fixing(self,list1):
+    def torrent_client_fixing(self,list1,Web_Hook_URL):
         for i in list1:
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
@@ -127,19 +134,21 @@ if __name__ == '__main__':
     check = os.path.exists(apps_file)
     if check == False:
         monitor.create_app_list()
-        Web_Hook_URL = monitor.Discord_Notifications()
+        Web_Hook_URL = monitor.Discord_Notifications_Accepter()
         print('Logs will be saved, now run', '\033[91m' + '"cat ~/script/app_monitor/docker_apps.txt  & cat ~/script/app_monitor/rtorrent.txt"' + '\033[0m', 'to print them!')
         time.sleep(5)
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:
-        monitor.rtorrent_monitor()
+        Web_Hook_URL = monitor.Discord_WebHook_Reader()
+        monitor.rtorrent_monitor(Web_Hook_URL)
         monitor_app_list.remove('rtorrent')
-        monitor.docker_app(monitor_app_list)
+        monitor.docker_app(monitor_app_list,Web_Hook_URL)
     
     else:
         monitor_app_list = monitor.read_list()
+        Web_Hook_URL = monitor.Discord_WebHook_Reader()
         s = monitor.torrent_client_checker(monitor_app_list,torrent_client_list)
-        monitor.torrent_client_fixing(s)
+        monitor.torrent_client_fixing(s,Web_Hook_URL)
         [monitor_app_list.remove(y) for y in s]
-        monitor.docker_app(monitor_app_list)
+        monitor.docker_app(monitor_app_list,Web_Hook_URL)
         
