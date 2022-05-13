@@ -100,7 +100,8 @@ class app_monitor():
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-                with open(docker_log_file, "a") as f:
+                os.system("app-{} restart".format(i))
+                with open(rtorrent_log_file, "a") as f:
                     f.write("\nTIME: "+current_time+"\n")
                     f.write(f'{i} was down and has been RESTARTED')
                     os.system("clear")
@@ -110,8 +111,8 @@ class app_monitor():
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-                os.system("app-deluge repair")
-                with open(docker_log_file, "a") as f:
+                os.system("app-{} repair".format(i))
+                with open(rtorrent_log_file, "a") as f:
                     f.write("\nTIME: "+current_time+"\n")
                     f.write(f'{i} was down and has been repair')
                     os.system("clear")
@@ -119,7 +120,7 @@ class app_monitor():
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-               with open(docker_log_file, "a") as f:
+               with open(rtorrent_log_file, "a") as f:
                     f.write(
                         f"\nScript is unable to FIX your {i} so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n")
 
