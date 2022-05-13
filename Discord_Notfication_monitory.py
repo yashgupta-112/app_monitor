@@ -109,19 +109,19 @@ class app_monitor():
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-                os.system("app-deluge restart")
+                os.system("app-{} restart".format(i))
                 data = {"content": f'Your {i} application was down and has been restarted by script:)'}
                 response = requests.post(Web_Hook_URL, json=data)
             else:
                 pass
-            time.sleep(3)
+            time.sleep(2)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-                os.system("app-deluge repair")
+                os.system("app-{} repair".format(i))
                 data = {"content": f'Your {i} application was down and has been restarted by script:)'}
                 response = requests.post(Web_Hook_URL, json=data)
-            time.sleep(3)
+            time.sleep(2)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
@@ -135,7 +135,6 @@ if __name__ == '__main__':
     if check == False:
         monitor.create_app_list()
         Web_Hook_URL = monitor.Discord_Notifications_Accepter()
-        print('Logs will be saved, now run', '\033[91m' + '"cat ~/script/app_monitor/docker_apps.txt  & cat ~/script/app_monitor/rtorrent.txt"' + '\033[0m', 'to print them!')
         time.sleep(5)
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:
@@ -143,7 +142,7 @@ if __name__ == '__main__':
         monitor.rtorrent_monitor(Web_Hook_URL)
         monitor_app_list.remove('rtorrent')
         monitor.docker_app(monitor_app_list,Web_Hook_URL)
-    
+        os.system("clear")
     else:
         monitor_app_list = monitor.read_list()
         Web_Hook_URL = monitor.Discord_WebHook_Reader()
@@ -151,4 +150,5 @@ if __name__ == '__main__':
         monitor.torrent_client_fixing(s,Web_Hook_URL)
         [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list,Web_Hook_URL)
+        os.system("clear")
         
