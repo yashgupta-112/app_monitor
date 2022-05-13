@@ -12,7 +12,7 @@ fi
 
 
 
-wget -P $HOME/script/app_monitor/ https://github.com/yashgupta-112/app_monitor/blob/master/App_status_check.py
+wget -P $HOME/script/app_monitor/ https://raw.githubusercontent.com/yashgupta-112/app_monitor/master/App_status_check.py
 
 clear
 
