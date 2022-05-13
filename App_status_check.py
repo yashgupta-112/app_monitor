@@ -135,6 +135,9 @@ if __name__ == '__main__':
     elif 'rtorrent' in monitor_app_list:
         monitor.rtorrent_monitor()
         monitor_app_list.remove('rtorrent')
+        s = monitor.torrent_client_checker(monitor_app_list,torrent_client_list)
+        monitor.torrent_client_fixing(s)
+        [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list,)
         os.system("clear")
     

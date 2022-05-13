@@ -140,6 +140,9 @@ if __name__ == '__main__':
         Web_Hook_URL = monitor.Discord_WebHook_Reader()
         monitor.rtorrent_monitor(Web_Hook_URL)
         monitor_app_list.remove('rtorrent')
+        s = monitor.torrent_client_checker(monitor_app_list,torrent_client_list)
+        monitor.torrent_client_fixing(s,Web_Hook_URL)
+        [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list,Web_Hook_URL)
         os.system("clear")
     else:
