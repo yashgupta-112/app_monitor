@@ -1,6 +1,9 @@
 import os
 import time
 from datetime import datetime
+import requests
+# Modules import 
+
 """
 Data and time to store restart time of application
 """
@@ -14,6 +17,7 @@ apps_file = '{}/script/app_monitor/apps.txt'.format(work_dir)
 monitor_app_list = []
 rtorrent_log_file = '{}/script/app_monitor/rtorrent.txt'.format(work_dir)
 docker_log_file = '{}/script/app_monitor/docker_apps.txt'.format(work_dir)
+Web_Hook_URL = ""
 torrent_client_list = ['deluge','transmission','qbittorrent','rtorrent']
 
 """
@@ -26,9 +30,8 @@ class app_monitor():
 
         if Pid == 256:  # Pid is 256 when os.system doesn't give O/P for Linux
             os.system("app-rtorrent restart")  # restart app
-            with open(rtorrent_log_file, "a") as f:
-                f.write("\n\nTIME: "+current_time+"\n")
-                f.write('rTorrent was down and has been RESTARTED')
+            data = {"content": f'rtorrent application was down and has been restarted by script:)'}
+            response = requests.post(Web_Hook_URL, json=data)
         else:
             pass
         time.sleep(2)
@@ -37,9 +40,8 @@ class app_monitor():
 
         if Pid2 == 256:  # no effect of restart so time to repair
             os.system("app-rtorrent repair")
-            with open(rtorrent_log_file, "a") as f:
-                f.write("\nTIME:"+current_time+"\n")
-                f.write('Restart failed so trying to REPAIR now')
+            data = {"content": f'rtorrent application was down and has been repair by script:)'}
+            response = requests.post(Web_Hook_URL, json=data)
 
         else:
             pass
@@ -48,10 +50,8 @@ class app_monitor():
         final_pid = os.system('pgrep rtorrent')
 
         if final_pid == 256:  # restart or repair comands doesn't work
-            with open(rtorrent_log_file, "a") as f:
-                f.write("\nTIME:"+current_time+"\n")
-                f.write("\nScript is unable to FIX your rTorrent so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n")
-
+            data = {"content": f'Script is unable to FIX your rTorrent so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php'}
+            response = requests.post(Web_Hook_URL, json=data)
         else:
             pass
 
@@ -61,19 +61,17 @@ class app_monitor():
             count = len(status.splitlines())
             if count <= 2:
                 os.system("app-{} upgrade".format(i))
-                with open(docker_log_file, "a") as f:
-                    f.write("\nTIME: "+current_time+"\n")
-                    f.write(f'{i} was down and has been RESTARTED')
-                    os.system("clear")
+                data = {"content": f'Your {i} application was down and has been restarted by script:)'}
+                response = requests.post(Web_Hook_URL, json=data)
             else:
                 pass
             time.sleep(3)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-                with open(docker_log_file, "a") as f:
-                    f.write(
-                        f"\nScript is unable to FIX your {i} so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n")
+                data = {"content": f"\nScript is unable to FIX your {i} so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n"}
+                response = requests.post(Web_Hook_URL, json=data)
+                        
 
     def create_app_list(self):
         app_list = input(
@@ -82,6 +80,10 @@ class app_monitor():
             for i in app_list:
                 f.write(i + '\n')
         f.close()
+        
+    def Discord_Notifications(self):
+        Web_Url = input("Please enter your Discord Web Hook Url Here:")
+        return Web_Url
 
     def read_list(self):
         with open(apps_file, 'r') as f:
@@ -100,10 +102,9 @@ class app_monitor():
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-                with open(docker_log_file, "a") as f:
-                    f.write("\nTIME: "+current_time+"\n")
-                    f.write(f'{i} was down and has been RESTARTED')
-                    os.system("clear")
+                os.system("app-deluge restart")
+                data = {"content": f'Your {i} application was down and has been restarted by script:)'}
+                response = requests.post(Web_Hook_URL, json=data)
             else:
                 pass
             time.sleep(3)
@@ -111,17 +112,14 @@ class app_monitor():
             count = len(status.splitlines())
             if count <= 2:
                 os.system("app-deluge repair")
-                with open(docker_log_file, "a") as f:
-                    f.write("\nTIME: "+current_time+"\n")
-                    f.write(f'{i} was down and has been repair')
-                    os.system("clear")
+                data = {"content": f'Your {i} application was down and has been restarted by script:)'}
+                response = requests.post(Web_Hook_URL, json=data)
             time.sleep(3)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-               with open(docker_log_file, "a") as f:
-                    f.write(
-                        f"\nScript is unable to FIX your {i} so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n")
+                data = {"content": f"\nScript is unable to FIX your {i} so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n"}
+                response = requests.post(Web_Hook_URL, json=data)
 
 
 monitor = app_monitor()
@@ -144,3 +142,4 @@ if __name__ == '__main__':
         monitor.torrent_client_fixing(s)
         [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list)
+        
