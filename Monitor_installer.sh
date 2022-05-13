@@ -17,7 +17,7 @@ wget -P $HOME/script/app_monitor/ https://raw.githubusercontent.com/yashgupta-11
 clear
 
 croncmd="/usr/bin/python3 $HOME/script/app_monitor/App_status_check.py"
-cronjob="5 * * * * $croncmd"
+cronjob="*/5 * * * * $croncmd"
 (
     crontab -l 2>/dev/null | grep -v -F "$croncmd" || :
     echo "$cronjob"

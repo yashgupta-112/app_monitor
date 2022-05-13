@@ -67,6 +67,7 @@ class app_monitor():
                     os.system("clear")
             else:
                 pass
+            time.sleep(3)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
