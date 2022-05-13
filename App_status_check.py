@@ -106,7 +106,7 @@ class app_monitor():
                     os.system("clear")
             else:
                 pass
-            time.sleep(3)
+            time.sleep(2)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
@@ -115,7 +115,7 @@ class app_monitor():
                     f.write("\nTIME: "+current_time+"\n")
                     f.write(f'{i} was down and has been repair')
                     os.system("clear")
-            time.sleep(3)
+            time.sleep(2)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
@@ -135,7 +135,8 @@ if __name__ == '__main__':
     elif 'rtorrent' in monitor_app_list:
         monitor.rtorrent_monitor()
         monitor_app_list.remove('rtorrent')
-        monitor.docker_app(monitor_app_list)
+        monitor.docker_app(monitor_app_list,)
+        os.system("clear")
     
     else:
         monitor_app_list = monitor.read_list()
@@ -143,3 +144,4 @@ if __name__ == '__main__':
         monitor.torrent_client_fixing(s)
         [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list)
+        os.system("clear")
