@@ -135,7 +135,6 @@ if __name__ == '__main__':
     if check == False:
         monitor.create_app_list()
         Web_Hook_URL = monitor.Discord_Notifications_Accepter()
-        time.sleep(5)
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:
         Web_Hook_URL = monitor.Discord_WebHook_Reader()

@@ -129,7 +129,6 @@ if __name__ == '__main__':
     check = os.path.exists(apps_file)
     if check == False:
         monitor.create_app_list()
-        Web_Hook_URL = monitor.Discord_Notifications()
         print('Logs will be saved, now run', '\033[91m' + '"cat ~/script/app_monitor/docker_apps.txt  & cat ~/script/app_monitor/rtorrent.txt"' + '\033[0m', 'to print them!')
         time.sleep(5)
         os.system("clear")
