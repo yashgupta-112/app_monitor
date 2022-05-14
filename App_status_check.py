@@ -14,11 +14,13 @@ apps_file = '{}/script/app_monitor/apps.txt'.format(work_dir)
 monitor_app_list = []
 rtorrent_log_file = '{}/script/app_monitor/rtorrent.txt'.format(work_dir)
 docker_log_file = '{}/script/app_monitor/docker_apps.txt'.format(work_dir)
-torrent_client_list = ['deluge','transmission','qbittorrent','rtorrent']
+torrent_client_list = ['deluge', 'transmission', 'qbittorrent', 'rtorrent']
 
 """
 Main function is defined below
 """
+
+
 class app_monitor():
     def rtorrent_monitor(self):
         Pid = os.system('pgrep rtorrent')
@@ -88,14 +90,21 @@ class app_monitor():
             s = f.readlines()
         monitor_app_list = [x.strip() for x in s]
         return monitor_app_list
-    
-    def torrent_client_checker(self,list1,list2):
+
+    def torrent_client_checker(self, list1, list2):
         list1 = set(list1)
         list2 = set(list2)
         list3 = list1.intersection(list2)
         return list(list3)
     
-    def torrent_client_fixing(self,list1):
+    def Webserver_Shinobi(self):
+        status = os.popen("ps aux | grep -i nginx")
+        count = len(status.readlines())
+        if count <= 2:
+                os.system("app-nginx uninstall && app-nginx install && app-nginx restart")
+        
+
+    def torrent_client_fixing(self, list1):
         for i in list1:
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
@@ -120,7 +129,7 @@ class app_monitor():
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
-               with open(rtorrent_log_file, "a") as f:
+                with open(rtorrent_log_file, "a") as f:
                     f.write(
                         f"\nScript is unable to FIX your {i} so please open a support ticket from here - https://my.ultraseedbox.com/submitticket.php\n")
 
@@ -130,21 +139,26 @@ if __name__ == '__main__':
     check = os.path.exists(apps_file)
     if check == False:
         monitor.create_app_list()
-        print('Logs will be saved, now run', '\033[91m' + '"cat ~/script/app_monitor/docker_apps.txt  & cat ~/script/app_monitor/rtorrent.txt"' + '\033[0m', 'to print them!')
+        print('Logs will be saved, now run',
+              '\033[91m' + '"cat ~/script/app_monitor/docker_apps.txt  & cat ~/script/app_monitor/rtorrent.txt"' + '\033[0m', 'to print them!')
         time.sleep(5)
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:
+        monitor. Webserver_Shinobi()
         monitor.rtorrent_monitor()
         monitor_app_list.remove('rtorrent')
-        s = monitor.torrent_client_checker(monitor_app_list,torrent_client_list)
+        s = monitor.torrent_client_checker(
+            monitor_app_list, torrent_client_list)
         monitor.torrent_client_fixing(s)
         [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list,)
         os.system("clear")
-    
+
     else:
+        monitor. Webserver_Shinobi()
         monitor_app_list = monitor.read_list()
-        s = monitor.torrent_client_checker(monitor_app_list,torrent_client_list)
+        s = monitor.torrent_client_checker(
+            monitor_app_list, torrent_client_list)
         monitor.torrent_client_fixing(s)
         [monitor_app_list.remove(y) for y in s]
         monitor.docker_app(monitor_app_list)

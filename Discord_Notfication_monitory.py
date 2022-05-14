@@ -106,6 +106,12 @@ class app_monitor():
         list2 = set(list2)
         list3 = list1.intersection(list2)
         return list(list3)
+    
+    def Webserver_Shinobi(self):
+        status = os.popen("ps aux | grep -i nginx")
+        count = len(status.readlines())
+        if count <= 2:
+                os.system("app-nginx uninstall && app-nginx install && app-nginx restart")
 
     def torrent_client_fixing(self, list1, Web_Hook_URL):
         for i in list1:
@@ -143,6 +149,7 @@ if __name__ == '__main__':
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:
         Web_Hook_URL = monitor.Discord_WebHook_Reader()
+        monitor.Webserver_Shinobi()
         monitor.rtorrent_monitor(Web_Hook_URL)
         monitor_app_list.remove('rtorrent')
         s = monitor.torrent_client_checker(
@@ -154,6 +161,7 @@ if __name__ == '__main__':
     else:
         monitor_app_list = monitor.read_list()
         Web_Hook_URL = monitor.Discord_WebHook_Reader()
+        monitor.Webserver_Shinobi()
         s = monitor.torrent_client_checker(
             monitor_app_list, torrent_client_list)
         monitor.torrent_client_fixing(s, Web_Hook_URL)
