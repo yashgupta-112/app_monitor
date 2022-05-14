@@ -1,11 +1,5 @@
 #!/bin/bash
 
-printf "\033[0;31mDisclaimer: This Script is unofficial and Ultra.cc staff will not support any issues with it will monitor your applications and restart them if application are not running it\033[0m\n"
-read -rp "Type confirm if you wish to continue: " input
-if [ ! "$input" = "confirm" ]; then
-  exit
-fi
-
 if [ ! -d "$HOME/script" ]; then
   mkdir -p "$HOME/script/app_monitor"
 fi
@@ -25,3 +19,4 @@ cronjob="*/5 * * * * $croncmd"
 
 
 /usr/bin/python3 $HOME/script/app_monitor/Discord_Notfication_monitory.py
+
