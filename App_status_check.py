@@ -31,6 +31,10 @@ Main function is defined below
 
 
 class app_monitor():
+    def InputValidation(self,lst1,lst2):
+        check = all(item in lst1 for item in lst2)
+        return check
+    
     def rtorrent_monitor(self):
         Pid = os.system('pgrep rtorrent')
         Pid = int(Pid)
