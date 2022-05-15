@@ -13,13 +13,22 @@ current_time = now.strftime("%H:%M:%S")
 Variable for location log files 
 """
 work_dir = os.getcwd()
-apps_file = '{}/script/app_monitor/apps.txt'.format(work_dir)
+apps_file = '{}/scripts/app_monitor/apps.txt'.format(work_dir)
 monitor_app_list = []
-rtorrent_log_file = '{}/script/app_monitor/rtorrent.txt'.format(work_dir)
-docker_log_file = '{}/script/app_monitor/docker_apps.txt'.format(work_dir)
-Discord_WebHook_File = '{}/script/app_monitor/discord.txt'.format(work_dir)
+rtorrent_log_file = '{}/scripts/app_monitor/rtorrent.txt'.format(work_dir)
+docker_log_file = '{}/scripts/app_monitor/docker_apps.txt'.format(work_dir)
+Discord_WebHook_File = '{}/scripts/app_monitor/discord.txt'.format(work_dir)
 Web_Hook_URL = ""
 torrent_client_list = ['deluge', 'transmission', 'qbittorrent', 'rtorrent']
+
+"""
+List of all application provide by us
+"""
+all_apps = ['airsonic', 'couchpotato', 'jackett', 'medusa', 'ombi', 'pydio', 'radarr', 'resilio', 'transmission', 'deluge',
+            'jdownloader2', 'mylar3', 'openvpn', 'pyload', 'rapidleech', 'rtorrent', 'ubooquity', 'autodl', 'deluge', 
+            'jellyfin', 'nextcloud', 'overseerr', 'rutorrent', 'sonarr', 'znc', 'bazarr', 'emby', 'lazylibrarian', 'plex', 'rapidleech',
+            'sabnzbd', 'syncthing', 'btsync', 'filebot', 'lidarr', 'nzbget', 'readarr', 'sickbeard', 'tautulli',
+            'filebrowser', 'mariadb', 'nzbhydra2', 'prowlarr', 'qbittorrent', 'requestrr', 'sickchill', 'thelounge']
 
 """
 Main function is defined below
@@ -27,6 +36,11 @@ Main function is defined below
 
 
 class app_monitor():
+    
+    def InputValidation(self,lst1,lst2):
+        check = all(item in lst1 for item in lst2)
+        return check
+    
     def rtorrent_monitor(self, Web_Hook_URL):
         Pid = os.system('pgrep rtorrent')
         Pid = int(Pid)
@@ -71,7 +85,7 @@ class app_monitor():
                 response = requests.post(Web_Hook_URL, json=data)
             else:
                 pass
-            time.sleep(3)
+            time.sleep(180)
             status = os.popen("ps aux | grep -i {}".format(i)).read()
             count = len(status.splitlines())
             if count <= 2:
@@ -81,6 +95,9 @@ class app_monitor():
     def create_app_list(self):
         app_list = input(
             "Please enter all applications you want to monitor with a single space in between(for example sonarr radarr lidarr):").split()
+        return app_list
+    
+    def write_applist(self, app_list):
         with open(apps_file, '+w') as f:
             for i in app_list:
                 f.write(i + '\n')
@@ -111,7 +128,7 @@ class app_monitor():
         status = os.popen("ps aux | grep -i nginx")
         count = len(status.readlines())
         if count <= 2:
-                os.system("app-nginx uninstall && app-nginx install && app-nginx restart")
+                os.system("app-nginx restart")
 
     def torrent_client_fixing(self, list1, Web_Hook_URL):
         for i in list1:
@@ -144,7 +161,14 @@ monitor = app_monitor()
 if __name__ == '__main__':
     check = os.path.exists(apps_file)
     if check == False:
-        monitor.create_app_list()
+        app_list = monitor.create_app_list()
+        while True:
+            if monitor.InputValidation(all_apps,app_list):
+                break
+            else:
+                print("Please check spelling of applications name\n")
+                app_list = monitor.create_app_list()
+        monitor.write_applist(app_list)
         Web_Hook_URL = monitor.Discord_Notifications_Accepter()
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:

@@ -1,23 +1,23 @@
 #!/bin/bash
 
-if [ ! -d "$HOME/script" ]; then
-  mkdir -p "$HOME/script/app_monitor"
+if [ ! -d "$HOME/scripts" ]; then
+  mkdir -p "$HOME/scripts/app_monitor"
 fi
 
 
 
-wget -P $HOME/script/app_monitor/ https://raw.githubusercontent.com/yashgupta-112/app_monitor/master/App_status_check.py
+wget -P $HOME/scripts/app_monitor/ https://raw.githubusercontent.com/yashgupta-112/app_monitor/master/App_status_check.py
 
 clear
 
-croncmd="/usr/bin/python3 $HOME/script/app_monitor/App_status_check.py"
+croncmd="/usr/bin/python3 $HOME/scripts/app_monitor/App_status_check.py"
 cronjob="*/5 * * * * $croncmd"
 (
     crontab -l 2>/dev/null | grep -v -F "$croncmd" || :
     echo "$cronjob"
 ) | crontab -
 
-croncmd="rm -rf $HOME/script/app_monitor/docker_apps.txt  rtorrent.txt"
+croncmd="rm -rf $HOME/scripts/app_monitor/docker_apps.txt  $HOME/script/app_monitor/torrentapps.txt"
 cronjob="0 0 1 * * $croncmd"
 (
     crontab -l 2>/dev/null | grep -v -F "$croncmd" || :
@@ -25,4 +25,4 @@ cronjob="0 0 1 * * $croncmd"
 ) | crontab -
 
 
-/usr/bin/python3 $HOME/script/app_monitor/App_status_check.py
+/usr/bin/python3 $HOME/scripts/app_monitor/App_status_check.py
