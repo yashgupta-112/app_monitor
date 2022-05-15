@@ -8,7 +8,7 @@ fi
 
 printf "Please choose option from below if you want notification on discord or as a long file on your service\n"
 printf "1. Store Applications status on your service at {~/scripts/app_monitor}\n"
-printf "2. To get application status on your Discord(You need Discord Webhook for it)\n"
+printf "2. To get application status on your Discord use your DiscordWebhook URL\n"
 
 read -rp "Please select option 1 or 2: " choice
 
