@@ -1,5 +1,6 @@
 #!/bin/bash
-printf "\033[0;31mDisclaimer: This Script is unofficial and Ultra.cc staff will not support any issues with it will monitor your applications and restart them if ap$
+
+printf "\033[0;31mDisclaimer: This Script is unofficial and Ultra.cc staff will not support any issues with it will monitor your applications and restart them if application are not running it\033[0m\n"
 read -rp "Type confirm if you wish to continue: " input
 if [ ! "$input" = "confirm" ]; then
   exit
@@ -22,5 +23,3 @@ fi
 if [ ! "$choice" = "1" ] && [ ! "$choice" = "2" ]; then
   echo "Wrong choice"
 fi
-
-
