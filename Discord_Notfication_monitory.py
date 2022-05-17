@@ -107,6 +107,7 @@ class app_monitor():
         Web_Url = input("Please enter your Discord Web Hook Url Here:")
         with open(Discord_WebHook_File, '+w') as f:
             f.write(Web_Url)
+        f.close()
 
     def Discord_WebHook_Reader(self):
         with open(Discord_WebHook_File, 'r') as f:
@@ -169,7 +170,7 @@ if __name__ == '__main__':
                 print("Please check spelling of applications name\n")
                 app_list = monitor.create_app_list()
         monitor.write_applist(app_list)
-        Web_Hook_URL = monitor.Discord_Notifications_Accepter()
+        monitor.Discord_Notifications_Accepter()
         os.system("clear")
     elif 'rtorrent' in monitor_app_list:
         Web_Hook_URL = monitor.Discord_WebHook_Reader()
